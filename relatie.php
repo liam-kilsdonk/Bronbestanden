@@ -1,4 +1,15 @@
-<?php
+<?php   
+     session_start();
+     session_destroy();
+     if (!isset($_SESSION['user_id'])) {
+         header("Location: login.php");
+         exit();
+     }
+     
+
+     $_SESSION['user_id'] = $gegevens['ID'];
+     $_SESSION['user_name'] = $gegevens['Naam'];
+
      include_once("functions.php");
      
      $relatieid = $_GET['RID'];
