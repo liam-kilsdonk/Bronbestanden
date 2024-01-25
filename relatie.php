@@ -67,31 +67,31 @@ if (isset($_SESSION['user_id'])) {
      $kopen = $stmt->fetchAll();
      
      $stmt = $db->prepare("SELECT huizen.ID as HID,
-                       StartDatum,
-                       Straat,
-                       CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
-                       Status,
-                       CONCAT('&euro; ', Max(Bod)) AS HoogsteBod,
-                       Status
-                  FROM huizen
-             LEFT JOIN relaties ON relaties.ID = huizen.FKRelatiesID 
-             LEFT JOIN biedingen ON biedingen.FKhuizenID = huizen.ID
-             LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
-             WHERE relaties.ID = $relatieid
-             GROUP BY huizen.ID
-             ORDER BY StartDatum");
-             
-     $stmt->execute();
+                    StartDatum,
+                    Straat,
+                    CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
+                    Status,
+                    CONCAT('&euro; ', Max(Bod)) AS HoogsteBod,
+                    Status
+               FROM huizen
+               LEFT JOIN relaties ON relaties.ID = huizen.FKRelatiesID 
+               LEFT JOIN biedingen ON biedingen.FKhuizenID = huizen.ID
+               LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
+               WHERE relaties.ID = ?
+               GROUP BY huizen.ID
+               ORDER BY StartDatum");
+
+     $stmt->execute([$relatieid]);
      $verkopen = $stmt->fetchAll();
      
      $stmt = $db->prepare("SELECT mijncriteria.ID as CID, Criterium, Van, Tem, Type,
-                       IF (Type = 1, Concat(Van, ' t/m ', Tem),  IF (Van > 0, 'Ja', 'Nee')) AS Waarde
-                  FROM mijncriteria
-             LEFT JOIN criteria ON criteria.ID = FKcriteriaID
-                 WHERE FKrelatiesID = $relatieid");
-
-     $stmt->execute();
+     IF (Type = 1, Concat(Van, ' t/m ', Tem),  IF (Van > 0, 'Ja', 'Nee')) AS Waarde
+               FROM mijncriteria
+               LEFT JOIN criteria ON criteria.ID = FKcriteriaID
+               WHERE FKrelatiesID = ?");
+     $stmt->execute([$relatieid]);
      $criteria = $stmt->fetchAll();
+
      
      $stmt = $db->prepare("SELECT ID, 
                        Naam, 
@@ -111,9 +111,6 @@ if (isset($_SESSION['user_id'])) {
      $stmt->execute();
      $makelaar = $stmt->fetch();
 
-
-     
-     
      echo '
           <!DOCTYPE html>
           <html lang="nl">
