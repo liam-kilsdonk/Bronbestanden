@@ -1,6 +1,14 @@
 <?php
 
+     session_start();
      include_once("functions.php");
+
+     if ($_SESSION['user_role'] !== 'admin') {
+          header("Location: inloggen.php");
+          exit();
+      }
+      
+      
      
      $db = ConnectDB();
      
