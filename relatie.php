@@ -1,14 +1,15 @@
 <?php   
-     session_start();
-     session_destroy();
-     if (!isset($_SESSION['user_id'])) {
-         header("Location: login.php");
-         exit();
-     }
+session_start();
+
+if (isset($_SESSION['user_id'])) {
+    session_destroy();
+    header("Location: login.php");
+    exit();
+}
      
 
-     $_SESSION['user_id'] = $gegevens['ID'];
-     $_SESSION['user_name'] = $gegevens['Naam'];
+     // $_SESSION['user_id'] = $gegevens['ID'];
+     // $_SESSION['user_name'] = $gegevens['Naam'];
 
      include_once("functions.php");
      
@@ -46,7 +47,7 @@
      
      $db = ConnectDB();
      
-     $sql = "   SELECT biedingen.ID as TKID,
+          $stmt = $db->prepare("SELECT biedingen.ID as TKID,
                        StartDatum,
                        IF(Bod, Datum, '&nbsp;') AS Datum,
                        CONCAT('&euro; ', Bod) AS Bod,
@@ -60,53 +61,56 @@
              LEFT JOIN huizen on huizen.ID = biedingen.FKhuizenID
              LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
                  WHERE " . $filter . "
-             ORDER BY Datum";
+             ORDER BY Datum");
              
-     $kopen = $db->query($sql)->fetchAll();
+     $stmt->execute();
+     $kopen = $stmt->fetchAll();
      
-     $sql = "   SELECT huizen.ID as HID,
-                       StartDatum,
-                       Straat,
-                       CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
-                       Status,
-                       CONCAT('&euro; ', Max(Bod)) AS HoogsteBod,
-                       Status
-                  FROM huizen
-             LEFT JOIN relaties ON relaties.ID = huizen.FKRelatiesID 
-             LEFT JOIN biedingen ON biedingen.FKhuizenID = huizen.ID
-             LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
-             WHERE relaties.ID = $relatieid
-             GROUP BY huizen.ID
-             ORDER BY StartDatum";
-             
-     $verkopen = $db->query($sql)->fetchAll();
+     $stmt = $db->prepare("SELECT huizen.ID as HID,
+                    StartDatum,
+                    Straat,
+                    CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
+                    Status,
+                    CONCAT('&euro; ', Max(Bod)) AS HoogsteBod,
+                    Status
+               FROM huizen
+               LEFT JOIN relaties ON relaties.ID = huizen.FKRelatiesID 
+               LEFT JOIN biedingen ON biedingen.FKhuizenID = huizen.ID
+               LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
+               WHERE relaties.ID = ?
+               GROUP BY huizen.ID
+               ORDER BY StartDatum");
+
+     $stmt->execute([$relatieid]);
+     $verkopen = $stmt->fetchAll();
      
-     $sql = "   SELECT mijncriteria.ID as CID, Criterium, Van, Tem, Type,
-                       IF (Type = 1, Concat(Van, ' t/m ', Tem),  IF (Van > 0, 'Ja', 'Nee')) AS Waarde
-                  FROM mijncriteria
-             LEFT JOIN criteria ON criteria.ID = FKcriteriaID
-                 WHERE FKrelatiesID = $relatieid";
+     $stmt = $db->prepare("SELECT mijncriteria.ID as CID, Criterium, Van, Tem, Type,
+     IF (Type = 1, Concat(Van, ' t/m ', Tem),  IF (Van > 0, 'Ja', 'Nee')) AS Waarde
+               FROM mijncriteria
+               LEFT JOIN criteria ON criteria.ID = FKcriteriaID
+               WHERE FKrelatiesID = ?");
+     $stmt->execute([$relatieid]);
+     $criteria = $stmt->fetchAll();
+
      
-     $criteria = $db->query($sql)->fetchAll();
-     
-     $sql = "   SELECT ID, 
+     $stmt = $db->prepare("SELECT ID, 
                        Naam, 
                        Email, 
                        Telefoon,
                        Wachtwoord
                   FROM relaties
-                 WHERE ID = " . $relatieid;
+                 WHERE ID = ?");
+     $stmt->execute([$relatieid]);
+     $gegevens = $stmt->fetch();
      
-     $gegevens = $db->query($sql)->fetch();
-     
-     $sql = "   SELECT relaties.ID AS MID
-                  FROM relaties
-             LEFT JOIN rollen ON rollen.ID = relaties.FKrollenID
-                 WHERE Waarde BETWEEN 30 AND 39 
-                 LIMIT 1"; // de eerste makelaar van Ultima Casa
-     
-     $makelaar = $db->query($sql)->fetch();
-     
+     $stmt = $db->prepare("SELECT relaties.ID AS MID
+          FROM relaties
+          LEFT JOIN rollen ON rollen.ID = relaties.FKrollenID
+          WHERE Waarde BETWEEN 30 AND 39 
+          LIMIT 1");
+     $stmt->execute();
+     $makelaar = $stmt->fetch();
+
      echo '
           <!DOCTYPE html>
           <html lang="nl">
