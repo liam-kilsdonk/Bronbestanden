@@ -1,7 +1,7 @@
 <?php
-     include_once("functions.php");
-     
-     echo '
+include_once("functions.php");
+
+echo '
 <!DOCTYPE html>
 <html lang="nl">
      <head>
@@ -26,7 +26,7 @@
                          <tr>
                               <td>&nbsp;</td>
                               <td>               
-                                   <form action="maakaccount-save.php" method="GET">
+                                   <form action="maakaccount-save.php" method="POST">
                                         <div class="form-group">
                                              <label for="Naam">Naam:</label>
                                              <input type="text" class="form-control" id="Naam" name="Naam" placeholder="Naam" required>
@@ -37,8 +37,18 @@
                                              pattern="' . $emailpattern . '">
                                         </div>
                                         <div class="form-group">
-                                             <label for="Wachtwoord">Wachtwoord:</label>
-                                             <input type="password" class="form-control" id="Wachtwoord" name="Wachtwoord" placeholder="Wachtwoord" required>
+                                             <label for="Wachtwoord">Wachtwoord (minimaal 8 tekens, 1 hoofdletter, 1 cijfer en 1 speciaal teken):</label>
+                                             <input type="password" class="form-control" id="Wachtwoord" name="Wachtwoord" 
+                                                    placeholder="Wachtwoord" 
+                                                    pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$" 
+                                                    title="Minimaal 8 tekens, 1 hoofdletter, 1 cijfer en 1 speciaal teken" required>
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="BevestigWachtwoord">Bevestig wachtwoord:</label>
+                                             <input type="password" class="form-control" id="BevestigWachtwoord" name="BevestigWachtwoord" 
+                                                    placeholder="Bevestig wachtwoord" 
+                                                    pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$" 
+                                                    title="Minimaal 8 tekens, 1 hoofdletter, 1 cijfer en 1 speciaal teken" required>
                                         </div>
                                         <div class="form-group">
                                              <label for="Telefoon">Mobiel telefoonnummer:</label>
@@ -59,5 +69,4 @@
           </div>
      </body>
 </html>';
-
 ?>
