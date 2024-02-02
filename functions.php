@@ -74,24 +74,25 @@ function InlogKop($relatieid, $titel, $extracel = "")
      
      $ingelogals = $db->query($sql)->fetch();
  
-     return 
-         '<table id="inlog_gegevens">
-               <tr>
-                    <td><h3>' . $titel . '</h3></td>
-                    <td class="text-right">' . $ingelogals["Omschrijving"] . '</td>
-                    <td>' . $ingelogals["Naam"] . '<br>' . 
-                            $ingelogals["Email"] . '<br>' . 
-                            $ingelogals["Telefoon"] .
-                   '</td>
-                    <td>                                                                             
-                         <button class="action-button button-column">
-                              <a href="index.php">Uitloggen</a>
-                         </button>
-                    </td>' .
-                    $extracel .
-              '</tr>
-          </table>';
+     return '<table id="inlog_gegevens">
+     <tr>
+         <td><h3>' . $titel . '</h3></td>
+         <td class="text-right">' . ($ingelogals["Omschrijving"] ?? '') . '</td>
+         <td>' . ($ingelogals["Naam"] ?? '') . '<br>' . 
+                 ($ingelogals["Email"] ?? '') . '<br>' . 
+                 ($ingelogals["Telefoon"] ?? '') .
+         '</td>
+         <td>                                                                             
+             <button class="action-button button-column">
+                 <a href="index.php">Uitloggen</a>
+             </button>
+         </td>' .
+         ($extracel ?? '') .
+     '</tr>
+ </table>';
+ 
 }
+
 
 
 function StuurMail($aan, $onderwerp, $mailbody, $headers)

@@ -323,11 +323,11 @@ if (isset($_SESSION['user_id'])) {
                                         <form action="relatieupd.php" method="GET">
                                              <h3>Mijn account</h3>
                                              <div class="form-group">
-                                                  <label for="Naam">Naam:</label>
-                                                  <input type="text" class="form-control" 
-                                                         id="Naam" name="Naam"
-                                                         value="' . $gegevens["Naam"] . '" placeholder="Naam" required>
-                                             </div>
+                                             <label for="Naam">Naam:</label>
+                                             <input type="text" class="form-control" 
+                                                    id="Naam" name="Naam"
+                                                    value="' . htmlspecialchars($gegevens["Naam"]) . '" placeholder="Naam" pattern="[A-Za-z\s]+" title="Alleen letters en spaties zijn toegestaan" required>
+                                         </div>                                         
                                              <div class="form-group">
                                                   <label for="Email">E-mail adres:</label>
                                                   <input type="email" class="form-control" 
