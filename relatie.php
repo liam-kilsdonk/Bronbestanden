@@ -351,7 +351,7 @@ if (isset($_SESSION['user_id'])) {
                                                   <button type="submit" class="action-button" id="upd" name="upd" 
                                                           value="' . $relatieid . '" title="Mijn account aanpassen.">Wijzigen
                                                   </button>
-                                                  <button class="action-button"><a href="relatie.php?RID=' . $relatieid . '" >Annuleren</a></button>
+                                                  <button class="action-button" id="annuleren">Annuleren</button>
                                              </div>
                                              <div class="form-group">
                                                   <button class="action-button button-column" 
@@ -365,6 +365,16 @@ if (isset($_SESSION['user_id'])) {
                          </div>
                     </div>
                </div>
+               <script>
+               // JavaScript functie om de pagina te vernieuwen en alle invoervelden te legen
+               function annulerenEnVernieuwen() {
+               // Ververs de pagina
+               location.reload();
+               }
+
+               // Voeg een event listener toe aan de Annuleren knop om de JavaScript functie aan te roepen
+               document.getElementById("annuleren").addEventListener("click", annulerenEnVernieuwen);
+               </script>
           </body>
      </html>';
 ?>
