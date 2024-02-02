@@ -7,10 +7,6 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
      
-
-     // $_SESSION['user_id'] = $gegevens['ID'];
-     // $_SESSION['user_name'] = $gegevens['Naam'];
-
      include_once("functions.php");
      
      $relatieid = $_GET['RID'];

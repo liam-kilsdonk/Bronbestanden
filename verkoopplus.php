@@ -43,7 +43,7 @@
                                    </div>
                                    <div class="form-group">
                                         <label for="Straat">Straat en huisnummer:</label>
-                                        <input type="text" class="form-control" placeholder="Straat en huisnummer" id="Straat" name="Straat" required>
+                                        <input type="text" class="form-control" placeholder="Straat en huisnummer" id="Straat" name="Straat"  value="' . htmlspecialchars($gegevens["Naam"]) . '" placeholder="Naam" pattern="[A-Za-z\s]+" title="Alleen letters en spaties zijn toegestaan" required>
                                    </div>
                                    <div class="form-group">
                                         <label for="Postcode">Postcode:</label>
@@ -53,7 +53,7 @@
                                    </div>
                                    <div class="form-group">
                                         <label for="Plaats">Plaats:</label>
-                                        <input type="text" class="form-control" placeholder="Plaats" id="Plaats" name="Plaats" required>
+                                        <input type="text" class="form-control" placeholder="Plaats" id="Plaats" name="Plaats"  value="' . htmlspecialchars($gegevens["Naam"]) . '" placeholder="Naam" pattern="[A-Za-z\s]+" title="Alleen letters en spaties zijn toegestaan" required>
                                    </div>
                               </div>
                               <div class="col-sm-3 col-md-3 col-lg-3 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">';                              

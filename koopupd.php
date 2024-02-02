@@ -9,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Genereer CSRF-token
 $token = bin2hex(random_bytes(32));
 $_SESSION['csrf_token'] = $token;
 
@@ -37,13 +36,10 @@ echo '
         <div class="col-sm-5 col-md-7 col-lg-5 col-sm-offset-4 col-md-offset-3 col-lg-offset-4">
             <h3>Het bod op het huis aanpassen</h3>';
 
-// Controleer CSRF-token
 if (!isset($_GET['token']) || $_GET['token'] !== $_SESSION['csrf_token']) {
-    // Ongeldig token, neem passende maatregelen (bijvoorbeeld doorverwijzen naar een foutpagina)
     die('Ongeldige aanvraag');
 }
 
-// Voer de rest van de logica uit
 
 $sql = "UPDATE biedingen
         SET Bod = " . $_GET['Bod'] . ",
